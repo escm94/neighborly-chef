@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Header, List } from 'semantic-ui-react';
-import { Meal } from '../models/Meal';
+import { Meal } from '../models/meal';
 
 function App() {
   const [meals, setMeals] = useState<Meal[]>([]);
