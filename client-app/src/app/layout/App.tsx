@@ -3,8 +3,8 @@ import { Container } from 'semantic-ui-react';
 import Navbar from './Navbar';
 import MealDashboard from '../../features/meals/dashboard/MealDashboard';
 import { Meal } from '../models/meal';
-import axios from 'axios';
 import { v4 as uuid } from 'uuid';
+import agent from '../api/agent';
 
 function App() {
   const [meals, setMeals] = useState<Meal[]>([]);
@@ -12,8 +12,8 @@ function App() {
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
-    axios.get<Meal[]>('http://localhost:5000/api/meals').then((response) => {
-      setMeals(response.data);
+    agent.Meals.list().then((response) => {
+      setMeals(response);
     });
   }, []);
 
