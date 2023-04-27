@@ -15,6 +15,10 @@ const requests = {
 
 const Meals = {
   list: () => requests.get<Meal[]>('/meals'),
+  details: (id: string) => requests.get<Meal>(`/meals/${id}`),
+  create: (meal: Meal) => requests.post<void>('/meals', meal),
+  update: (meal: Meal) => requests.put<void>(`/meals/${meal.id}`, meal),
+  delete: (id: string) => requests.del<void>(`/meals/${id}`),
 };
 
 const agent = {

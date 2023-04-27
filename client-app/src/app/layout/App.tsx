@@ -10,6 +10,7 @@ function App() {
   const [meals, setMeals] = useState<Meal[]>([]);
   const [selectedMeal, setSelectedMeal] = useState<Meal | undefined>(undefined);
   const [editMode, setEditMode] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     agent.Meals.list().then((response) => {
@@ -35,11 +36,23 @@ function App() {
   }
 
   function handleCreateOrEditMeal(meal: Meal) {
-    meal.id
-      ? setMeals([...meals.filter((x) => x.id !== meal.id), meal])
-      : setMeals([...meals, { ...meal, id: uuid() }]);
-    setEditMode(false);
-    setSelectedMeal(meal);
+    setSubmitting(true);
+    if (meal.id) {
+      agent.Meals.update(meal).then(() => {
+        setMeals([...meals.filter((x) => x.id !== meal.id), meal]);
+        setSelectedMeal(meal);
+        setEditMode(false);
+        setSubmitting(false);
+      });
+    } else {
+      meal.id = uuid();
+      agent.Meals.create(meal).then(() => {
+        setMeals([...meals, meal]);
+        setSelectedMeal(meal);
+        setEditMode(false);
+        setSubmitting(false);
+      });
+    }
   }
 
   function handleDeleteMeal(id: string) {
