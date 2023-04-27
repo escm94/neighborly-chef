@@ -56,7 +56,11 @@ function App() {
   }
 
   function handleDeleteMeal(id: string) {
-    setMeals([...meals.filter((x) => x.id !== id)]);
+    setSubmitting(true);
+    agent.Meals.delete(id).then(() => {
+      setMeals([...meals.filter((x) => x.id !== id)]);
+      setSubmitting(false);
+    });
   }
 
   return (
