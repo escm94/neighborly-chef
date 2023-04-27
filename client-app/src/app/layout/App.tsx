@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Header, List } from 'semantic-ui-react';
+import { Container } from 'semantic-ui-react';
+import Navbar from './Navbar';
+import MealDashboard from '../../features/meals/dashboard/MealDashboard';
 import { Meal } from '../models/meal';
+import axios from 'axios';
+import { v4 as uuid } from 'uuid';
 
 function App() {
   const [meals, setMeals] = useState<Meal[]>([]);
+  const [selectedMeal, setSelectedMeal] = useState<Meal | undefined>(undefined);
+  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     axios.get<Meal[]>('http://localhost:5000/api/meals').then((response) => {
@@ -12,15 +17,52 @@ function App() {
     });
   }, []);
 
+  function handleSelectMeal(id: string) {
+    setSelectedMeal(meals.find((x) => x.id === id));
+  }
+
+  function handleCancelSelectMeal() {
+    setSelectedMeal(undefined);
+  }
+
+  function handleFormOpen(id?: string) {
+    id ? handleSelectMeal(id) : handleCancelSelectMeal();
+    setEditMode(true);
+  }
+
+  function handleFormClose() {
+    setEditMode(false);
+  }
+
+  function handleCreateOrEditMeal(meal: Meal) {
+    meal.id
+      ? setMeals([...meals.filter((x) => x.id !== meal.id), meal])
+      : setMeals([...meals, { ...meal, id: uuid() }]);
+    setEditMode(false);
+    setSelectedMeal(meal);
+  }
+
+  function handleDeleteMeal(id: string) {
+    setMeals([...meals.filter((x) => x.id !== id)]);
+  }
+
   return (
-    <div>
-      <Header as="h2" icon="users" content="Meals" />
-      <List>
-        {meals.map((meal) => (
-          <List.Item key={meal.id}>{meal.name}</List.Item>
-        ))}
-      </List>
-    </div>
+    <>
+      <Navbar openForm={handleFormOpen} />
+      <Container style={{ marginTop: '7em' }}>
+        <MealDashboard
+          meals={meals}
+          selectedMeal={selectedMeal}
+          selectMeal={handleSelectMeal}
+          cancelSelectMeal={handleCancelSelectMeal}
+          editMode={editMode}
+          openForm={handleFormOpen}
+          closeForm={handleFormClose}
+          createOrEdit={handleCreateOrEditMeal}
+          deleteMeal={handleDeleteMeal}
+        />
+      </Container>
+    </>
   );
 }
 
