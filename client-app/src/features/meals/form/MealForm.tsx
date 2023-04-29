@@ -6,12 +6,14 @@ interface Props {
   meal: Meal | undefined;
   closeForm: () => void;
   createOrEdit: (meal: Meal) => void;
+  submitting: boolean;
 }
 
 export default function MealForm({
   meal: selectedMeal,
   closeForm,
   createOrEdit,
+  submitting,
 }: Props) {
   const initialState = selectedMeal ?? {
     id: '',
@@ -47,7 +49,13 @@ export default function MealForm({
           name="description"
           onChange={handleInputChange}
         ></Form.TextArea>
-        <Button floated="right" positive type="submit" content="Submit" />
+        <Button
+          loading={submitting}
+          floated="right"
+          positive
+          type="submit"
+          content="Submit"
+        />
         <Button
           onClick={closeForm}
           floated="right"

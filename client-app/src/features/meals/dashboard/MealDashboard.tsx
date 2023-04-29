@@ -15,6 +15,7 @@ interface Props {
   closeForm: () => void;
   createOrEdit: (meal: Meal) => void;
   deleteMeal: (id: string) => void;
+  submitting: boolean;
 }
 
 export default function MealDashboard({
@@ -27,6 +28,7 @@ export default function MealDashboard({
   closeForm,
   createOrEdit,
   deleteMeal,
+  submitting,
 }: Props) {
   return (
     <Grid>
@@ -35,6 +37,7 @@ export default function MealDashboard({
           meals={meals}
           selectMeal={selectMeal}
           deleteMeal={deleteMeal}
+          submitting={submitting}
         />
       </Grid.Column>
       <Grid.Column width={4}>
@@ -50,6 +53,7 @@ export default function MealDashboard({
             closeForm={closeForm}
             meal={selectedMeal}
             createOrEdit={createOrEdit}
+            submitting={submitting}
           />
         )}
       </Grid.Column>

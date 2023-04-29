@@ -1,4 +1,4 @@
-import react from 'react';
+import react, { SyntheticEvent } from 'react';
 import { Button, Item, Segment } from 'semantic-ui-react';
 import { Meal } from '../../../app/models/meal';
 
@@ -6,9 +6,22 @@ interface Props {
   meal: Meal;
   selectMeal: (id: string) => void;
   deleteMeal: (id: string) => void;
+  submitting: boolean;
 }
 
-export default function MealListItem({ meal, selectMeal, deleteMeal }: Props) {
+export default function MealListItem({
+  meal,
+  selectMeal,
+  deleteMeal,
+  submitting,
+}: Props) {
+  const [target, setTarget] = react.useState('');
+
+  function handleMealDelete(e: SyntheticEvent<HTMLButtonElement>, id: string) {
+    setTarget(e.currentTarget.name);
+    deleteMeal(id);
+  }
+
   return (
     <Segment.Group>
       <Segment>
@@ -28,10 +41,12 @@ export default function MealListItem({ meal, selectMeal, deleteMeal }: Props) {
           content="View"
         />
         <Button
-          onClick={() => deleteMeal(meal.id)}
+          onClick={(e) => handleMealDelete(e, meal.id)}
           color="red"
           floated="right"
           content="Delete"
+          loading={submitting && target === meal.id}
+          name={meal.id}
         />
       </Segment>
     </Segment.Group>

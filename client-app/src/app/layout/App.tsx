@@ -5,16 +5,19 @@ import MealDashboard from '../../features/meals/dashboard/MealDashboard';
 import { Meal } from '../models/meal';
 import { v4 as uuid } from 'uuid';
 import agent from '../api/agent';
+import LoadingComponent from './LoadingComponent';
 
 function App() {
   const [meals, setMeals] = useState<Meal[]>([]);
   const [selectedMeal, setSelectedMeal] = useState<Meal | undefined>(undefined);
   const [editMode, setEditMode] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     agent.Meals.list().then((response) => {
       setMeals(response);
+      setLoading(false);
     });
   }, []);
 
@@ -63,6 +66,9 @@ function App() {
     });
   }
 
+  if (loading)
+    return <LoadingComponent content="Loading app"></LoadingComponent>;
+
   return (
     <>
       <Navbar openForm={handleFormOpen} />
@@ -77,6 +83,7 @@ function App() {
           closeForm={handleFormClose}
           createOrEdit={handleCreateOrEditMeal}
           deleteMeal={handleDeleteMeal}
+          submitting={submitting}
         />
       </Container>
     </>
