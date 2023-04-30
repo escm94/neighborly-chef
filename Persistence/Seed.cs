@@ -14,21 +14,25 @@ namespace Persistence
                 {
                     Name = "Baked Ziti",
                     Description = "Laborum cillum id ut ea in Lorem amet commodo nostrud esse.",
+                    UnitPrice = 9.99m,
                 },
                 new Meal
                 {
                     Name = "Meatball Sub",
                     Description = "Excepteur eu in tempor culpa exercitation nulla sunt laboris mollit proident ullamco qui quis.",
+                    UnitPrice = 8.99m,
                 },
                 new Meal
                 {
                     Name = "Broccoli Cheddar Soup",
                     Description = "Fugiat tempor adipisicing nulla culpa minim reprehenderit aliquip.",
+                    UnitPrice = 5.99m,
                 },
                 new Meal
                 {
                     Name = "Bacon Cheeseburger",
                     Description = "Sit qui aute mollit deserunt.",
+                    UnitPrice = 10.99m,
                 }
             };
 
