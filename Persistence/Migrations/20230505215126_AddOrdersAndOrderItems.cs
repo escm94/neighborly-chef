@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class Order : Migration
+    public partial class AddOrdersAndOrderItems : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,40 +32,48 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MealOrder",
+                name: "OrderItems",
                 columns: table => new
                 {
-                    MealsId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    OrdersId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    OrderId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    MealId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Quantity = table.Column<int>(type: "INTEGER", nullable: false),
+                    LinePrice = table.Column<decimal>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MealOrder", x => new { x.MealsId, x.OrdersId });
+                    table.PrimaryKey("PK_OrderItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MealOrder_Meals_MealsId",
-                        column: x => x.MealsId,
+                        name: "FK_OrderItems_Meals_MealId",
+                        column: x => x.MealId,
                         principalTable: "Meals",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MealOrder_Orders_OrdersId",
-                        column: x => x.OrdersId,
+                        name: "FK_OrderItems_Orders_OrderId",
+                        column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_MealOrder_OrdersId",
-                table: "MealOrder",
-                column: "OrdersId");
+                name: "IX_OrderItems_MealId",
+                table: "OrderItems",
+                column: "MealId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_OrderId",
+                table: "OrderItems",
+                column: "OrderId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "MealOrder");
+                name: "OrderItems");
 
             migrationBuilder.DropTable(
                 name: "Orders");

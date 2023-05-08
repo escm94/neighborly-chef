@@ -1,35 +1,33 @@
 using AutoMapper;
-using Domain;
 using MediatR;
 using Persistence;
 
-namespace Application.Meals
+namespace Application.OrderItems
 {
   public class Update
   {
-    public class Command : IRequest<Unit>
+    public class Command : IRequest
     {
-      public Meal Meal { get; set; }
+      public OrderItemDto OrderItem { get; set; }
     }
 
-    public class Handler : IRequestHandler<Command, Unit>
+    public class Handler : IRequestHandler<Command>
     {
       private readonly DataContext _context;
       private readonly IMapper _mapper;
-
       public Handler(DataContext context, IMapper mapper)
       {
-        _mapper = mapper;
         _context = context;
+        _mapper = mapper;
       }
 
       public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
       {
-        var meal = await _context.Meals.FindAsync(request.Meal.Id);
+        var orderItem = await _context.OrderItems.FindAsync(request.OrderItem.Id);
 
-        if (meal == null) throw new Exception("Could not find meal");
+        _mapper.Map(request.OrderItem, orderItem);  
 
-        _mapper.Map(request.Meal, meal);
+        if (orderItem == null) throw new Exception("Could not find order item");
 
         var success = await _context.SaveChangesAsync() > 0;
 

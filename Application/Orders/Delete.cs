@@ -1,7 +1,7 @@
 using MediatR;
 using Persistence;
 
-namespace Application.Meals
+namespace Application.Orders
 {
     public class Delete
     {
@@ -13,17 +13,19 @@ namespace Application.Meals
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
+
             public Handler(DataContext context)
             {
                 _context = context;
             }
+
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var meal = await _context.Meals.FindAsync(request.Id);
+                var order = await _context.Orders.FindAsync(request.Id);
 
-                if (meal == null) throw new Exception("Could not find meal");
+                if (order == null) throw new Exception("Could not find order");
 
-                _context.Remove(meal);
+                _context.Remove(order);
 
                 var success = await _context.SaveChangesAsync() > 0;
 
@@ -31,6 +33,7 @@ namespace Application.Meals
 
                 throw new Exception("Problem saving changes");
             }
+
         }
     }
 }

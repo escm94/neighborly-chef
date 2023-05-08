@@ -6,6 +6,7 @@ namespace Persistence
     {
         public static async Task SeedData(DataContext context)
         {
+
             if (context.Meals.Any()) return;
             
             var meals = new List<Meal>
