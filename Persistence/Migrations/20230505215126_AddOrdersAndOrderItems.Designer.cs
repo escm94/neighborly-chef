@@ -11,8 +11,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230430185249_Order")]
-    partial class Order
+    [Migration("20230505215126_AddOrdersAndOrderItems")]
+    partial class AddOrdersAndOrderItems
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,34 +57,55 @@ namespace Persistence.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("MealOrder", b =>
+            modelBuilder.Entity("Domain.OrderItem", b =>
                 {
-                    b.Property<Guid>("MealsId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("OrdersId")
+                    b.Property<decimal>("LinePrice")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("MealsId", "OrdersId");
+                    b.Property<Guid>("MealId")
+                        .HasColumnType("TEXT");
 
-                    b.HasIndex("OrdersId");
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("TEXT");
 
-                    b.ToTable("MealOrder");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MealId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderItems");
                 });
 
-            modelBuilder.Entity("MealOrder", b =>
+            modelBuilder.Entity("Domain.OrderItem", b =>
                 {
-                    b.HasOne("Domain.Meal", null)
+                    b.HasOne("Domain.Meal", "Meal")
                         .WithMany()
-                        .HasForeignKey("MealsId")
+                        .HasForeignKey("MealId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersId")
+                    b.HasOne("Domain.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Meal");
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("Domain.Order", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

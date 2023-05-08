@@ -1,29 +1,35 @@
 using MediatR;
+using Domain;
 using Persistence;
+using AutoMapper;
 
-namespace Application.Meals
+namespace Application.Orders
 {
-    public class Delete
+    public class Update
     {
         public class Command : IRequest
         {
-            public Guid Id { get; set; }
+            public OrderDto Order { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
-            public Handler(DataContext context)
+            private readonly IMapper _mapper;
+
+            public Handler(DataContext context, IMapper mapper)
             {
                 _context = context;
+                _mapper = mapper;
             }
+
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var meal = await _context.Meals.FindAsync(request.Id);
+                var order = await _context.Orders.FindAsync(request.Order.Id);
 
-                if (meal == null) throw new Exception("Could not find meal");
+                if (order == null) throw new Exception("Could not find order");
 
-                _context.Remove(meal);
+                _mapper.Map(request.Order, order);
 
                 var success = await _context.SaveChangesAsync() > 0;
 

@@ -1,6 +1,6 @@
-namespace Domain
+namespace Application.Meals
 {
-    public class Meal
+    public class MealDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
